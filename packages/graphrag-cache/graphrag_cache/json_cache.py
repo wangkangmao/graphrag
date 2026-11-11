@@ -43,7 +43,10 @@ class JsonCache(Cache):
                 await self._storage.delete(key)
                 return None
             else:
-                return data.get("result")
+                if not isinstance(data, dict) or "result" not in data:
+                    await self._storage.delete(key)
+                    return None
+                return data["result"]
 
         return None
 
